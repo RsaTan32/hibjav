@@ -1,0 +1,58 @@
+:root {
+    --sidebar-width: 250px;
+    --bg-dark: #1e1e2e;
+    --sidebar-bg: #181825;
+    --accent: #89b4fa;
+    --text-main: #cdd6f4;
+    --hover: #313244;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* Számválasztó nyilak eltüntetése mindenhol */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type=number] { -moz-appearance: textfield; }
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    overflow: hidden;
+}
+
+.app-container {
+    display: flex;
+    height: 100vh;
+}
+
+.main-content {
+    flex-grow: 1;
+    padding: 2rem;
+    overflow-y: auto;
+}
+
+header h1 {
+    margin-bottom: 2rem;
+    font-weight: 300;
+    border-bottom: 1px solid #45475a;
+    padding-bottom: 10px;
+}
+
+/* Tab kezelés */
+.tab-content {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.tab-content.active-tab {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

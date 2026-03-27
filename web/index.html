@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HibJav</title>
+    <script type="text/javascript" src="/eel.js"></script>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/matrix.css">
+    <link rel="stylesheet" href="css/ui.css">
+</head>
+<body>
+    <div class="app-container">
+        <!--  SIDEBAR  -->
+          <nav class="sidebar">
+            <div class="sidebar-header">
+                <h2>HibJav</h2>
+            </div>
+            <ul class="nav-links">
+                <li onclick="switchTab(event, 'pivot')">
+                    <span class="icon">⊞</span> Mátrix Pivotálás
+                </li>
+                <li onclick="switchTab(event, 'parity')">
+                    <span class="icon">G</span> ParitásMátrix (Z13)
+                </li>
+                <li onclick="switchTab(event, 'matrix-multiplication')">
+                    <span class="icon">Δ</span> Mátrix szorzás
+                </li>
+                <li onclick="switchTab(event, 'history')">
+                    <span class="icon">🕒</span> Előzmények
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <p class="version">v1.0.0</p>
+                <a href="mailto:tothistvan3221@gmail.com" class="contact-link">
+                    <span class="contact-icon">✉</span>
+                    <span class="contact-text">Contact: Tóth István</span>
+                </a>
+            </div>
+          </nav>
+
+          <!--  MAIN CONTENT  -->
+            <main class="main-content">
+                <header>
+                    <h1 id="current-title"></h1>
+                </header>
+
+                <section id="content-area">
+                    <div id="tab-welcome" class="tab-content active-tab">
+                        <div class="welcome-card">
+                            <p>Válassz egy funckiót a bal oldali menüből a kezdéshez.</p>
+                        </div>
+                        
+                    </div>
+                    <!--  pivotálás fül  -->
+                    <div id="tab-pivot" class="tab-content">
+                        <div class="welcome-card">
+                            <h3>Mátrix Méretének Beállítása</h3>
+                            <div class="input-group">
+                                <label>Sorok:</label>
+                                <input type="number" id="rows" value="3">
+                                <label>Oszlopok:</label>
+                                <input type="number" id="cols" value="3">
+                                <button class="btn-primary" onclick="generateGrid()">Mátrix Generálása</button>
+                            </div>
+                        </div>
+                        <div id="matrix-container" class="matrix-view"></div>
+                    </div>
+                    <!--  paritásmátrix fül  -->
+                      <div id="tab-parity" class="tab-content" style="display: none;">
+                        <div class="welcome-card">
+                            <h3>Paritásmátrix generálása Z<sub>13</sub> felett</h3>
+                            <p>Add meg a generátormátrixot (G), a szoftver pedig kiszámolja a paritásmátrixot (H).</p>
+                            <div class="input-group">
+                                <label>Z<sub>p</sub> modulus:</label>
+                                <input type="number" id="modulus-p" value="13" min="2" max="100">
+                                <label>k (sorok):</label>
+                                <input type="number" id="rows-p" value="4" min="1">
+                                <label>n (oszlopok):</label>
+                                <input type="number" id="cols-p" value="6" min="1">
+                                <button class="btn-primary" onclick="generateParityGrid()">Paritásmátrix Generálása</button>
+                            </div>
+                        </div>
+                        <div id="parity-container"></div>
+                        <div id="steps-display"></div>
+                      </div>
+                      <!--  MÁTRIX SZORZÁS FÜL  -->
+                        <div id="tab-matrix-multiplication" class="tab-content" style="display: none;">
+                            <div class="welcome-card">
+                                <h3>Mátrix Szorzás</h3>
+                                <p>Szorozzunk össze két mátrixot. Adj meg két mátrixot: <strong>A x B = C</strong></p>
+
+                                <div class="module-settings">
+                                    <div class="input-group">
+                                        <label>
+                                            <input type="checkbox" id="use-modulo" onchange="toggleModulo()">
+                                            Moduláris aritmetika használata
+                                        </label>
+                                        <input type="number" id="modulo-value" value="13" min="2" disabled>
+                                        <span id="modulo-label" style="display: none;">mod</span>
+                                    </div>
+                                </div>
+
+                                <div class="matrix-mult-setup">
+                                    <div class="matrix-setup-card">
+                                        <h4>A mátrix (bal oldali)</h4>
+                                        <div class="input-group">
+                                            <label>Sorok (m):</label>
+                                            <input type="number" id="matrix-a-rows" value="2" min="1" max="10">
+                                            <label>Oszlopok (n):</label>
+                                            <input type="number" id="matrix-a-cols" value="3" min="1" max="10">
+                                        </div>
+                                        <button class="btn-primary" onclick="generateMatrixA()">A mátrix generálása</button>
+                                    </div>
+                                    <div class="matrix-setup-card">
+                                        <h4>B mátrix (jobb oldali)</h4>
+                                        <div class="input-group">
+                                            <label>Sorok: (p):</label>
+                                            <input type="number" id="matrix-b-rows" value="3" min="1" max="10">
+                                            <label>Oszlopok (q):</label>
+                                            <input type="number" id="matrix-b-cols" value="2" min="1" max="10">
+                                        </div>
+                                        <button class="btn-primary" onclick="generateMatrixB()">B mátrix generálása</button>
+                                        <div id="matrix-b-warning" class="warning-message" style="display: none;"></div>
+                                    </div>
+                                </div>
+                                <div class="matrix-operations">
+                                    <button class="btn-success" onclick="multiplyMatrices()" id="multiply-btn" disabled>A x B kiszámítása</button>
+                                    <button class="btn-secondary" onclick="clearMultiplication()">Mindkét mátrix törlése</button>
+                                </div>
+                            </div>
+                            <!--  Mátrix megjelenítő terület  -->
+                              <div id="matrix-display-area"></div>
+
+                              <!--  Eredmény megjelenítő terület  -->
+                                <div id="result-display-area"></div>
+
+                        </div>
+                </section>
+            </main>
+    </div>
+    <script src="js/matrix_ui.js"></script>
+    <script src="js/pivot_calc.js"></script>
+    <script src="js/parity_calc.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/matrix_multiplication.js"></script>
+</body>
+</html>
